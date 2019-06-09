@@ -38,24 +38,28 @@ class  App extends Component {
     this.state = {
       input: '',
       imageUrl:'',
-      box: {},
+      box: [],
       route: 'sign-in',
       isSignedIn: false
     }
   }
 
   calculateFaceLocation = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box
+
     const image = document.getElementById('inputImage');
     const width = Number(image.width);
     const height = Number(image.height);
-    
-    return{
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height)
-    }
+
+    const boundedBoxes = data.outputs[0].data.regions.map(item =>{
+      return {
+        leftCol: item.region_info.bounding_box.left_col * width,
+        topRow: item.region_info.bounding_box.top_row * height,
+        rightCol: width - (item.region_info.bounding_box.right_col * width),
+        bottomRow: height - (item.region_info.bounding_box.bottom_row * height)
+      }
+    })
+
+    return boundedBoxes;
   }
 
 
