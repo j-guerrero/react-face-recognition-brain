@@ -18,15 +18,15 @@ const particlesOptions = {
       }
     },
     size: {
-      value: 4,
+      value: 7,
       random: true,
       anim: {
-        speed: 20,
-        size_min:0.5
+        speed: 2,
+        size_min:1
       }
     },
     line_linked: {
-      enable: false
+      enable: true
     },
     move: {
       random: true,

@@ -46,6 +46,28 @@ class SignIn extends React.Component {
 					this.setState({isInvalid: true})
 				}
 			})
+	}
+
+	onSubmitTest = () => {
+		fetch('https://morning-woodland-38355.herokuapp.com/signin', {
+			method: 'post',
+			headers: {'Content-Type':'application/json'},
+			body: JSON.stringify({
+				email: "test@test.com",
+				password: "test"
+			})
+		})
+			.then(response => response.json())
+			.then(user => {
+				if (user.id){
+					this.setState({isInvalid: false});
+					this.props.loadUser(user);
+					this.props.onRouteChange('home')
+				}
+				else{
+					this.setState({isInvalid: true})
+				}
+			})
 		
 	}
 
@@ -88,9 +110,14 @@ class SignIn extends React.Component {
 			    <div className="">
 			      <input
 			      		onClick = {this.onSubmitSignIn}
-			      		className="b--black ph3 pv2 input-reset ba bg-transparent grow pointer f6 dib" 
+			      		className="b--black ph3 pv2 mh1 input-reset ba bg-transparent grow pointer f6 dib" 
 			      		type="submit"
 			      		value="Sign in" />
+			      <input 
+			      		onClick = {this.onSubmitTest}
+			      		className="b--black ph3 pv2 mh1 input-reset ba bg-transparent grow pointer f6 dib" 
+			      		type="submit"
+			      		value="Test" />
 			    </div>
 			  </div>
 			</main>
