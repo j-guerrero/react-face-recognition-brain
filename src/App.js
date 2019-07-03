@@ -12,15 +12,28 @@ import './App.css';
 const particlesOptions = {
   particles: {
     number:{
-      value: 100,
+      value: 300,
       density: {
-        enable: true,
-        value_area: 800
+        enable: false,
       }
     },
     size: {
-      value: 0
-    }
+      value: 4,
+      random: true,
+      anim: {
+        speed: 20,
+        size_min:0.5
+      }
+    },
+    line_linked: {
+      enable: false
+    },
+    move: {
+      random: true,
+      speed: 1,
+      direction: "top",
+      out_mode: "out"
+    },
   }
 }
 
@@ -28,7 +41,7 @@ const particlesOptions = {
 const intialState = {
       input: '',
       imageUrl:'',
-      box: [],
+      boxes: [],
       route: 'sign-in',
       isSignedIn: false,
       user: {
@@ -47,7 +60,7 @@ class  App extends Component {
     this.state = {
       input: '',
       imageUrl:'',
-      box: [],
+      boxes: [],
       route: 'sign-in',
       isSignedIn: false,
       user: {
@@ -70,7 +83,7 @@ class  App extends Component {
     }})
   }
 
-  calculateFaceLocation = (data) => {
+  calculateFaceLocations = (data) => {
 
     const image = document.getElementById('inputImage');
     const width = Number(image.width);
@@ -89,8 +102,8 @@ class  App extends Component {
   }
 
 
-  displayFaceBox = (box) => {
-    this.setState({box: box});
+  displayFaceBoxes = (boxes) => {
+    this.setState({boxes: boxes});
   }
 
   onInputChange = (event) => {
@@ -98,13 +111,16 @@ class  App extends Component {
   };
 
   onButtonSubmit = () =>{
-    this.setState({imageUrl: this.state.input});
+
+    const { input, user } = this.state;
+
+    this.setState({imageUrl: input});
 
     fetch('https://morning-woodland-38355.herokuapp.com/imageurl', {
         method: 'post',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
-          input: this.state.input
+          input: input
          })
       })
       .then(response => response.json())
@@ -114,17 +130,17 @@ class  App extends Component {
             method: 'put',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
-              id: this.state.user.id
+              id: user.id
              })
           })
             .then(response => response.json())
             .then(count => {
-              this.setState(Object.assign(this.state.user, {entries: count}))
+              this.setState(Object.assign(user, {entries: count}))
             })
             .catch(console.log);
         }
 
-        this.displayFaceBox(this.calculateFaceLocation(response));
+        this.displayFaceBoxes(this.calculateFaceLocations(response));
       })
       .catch(err => console.log(err));
   };
@@ -143,7 +159,7 @@ class  App extends Component {
 
   render(){
 
-    const { isSignedIn, imageUrl, route, box } = this.state;
+    const { isSignedIn, imageUrl, route, boxes, user } = this.state;
 
     return (
       <div className="App">
@@ -153,12 +169,12 @@ class  App extends Component {
         { route === 'home' ?
           <div>
                 <Logo />
-                <Rank name={this.state.user.name} entries ={this.state.user.entries} />
+                <Rank name={user.name} entries ={user.entries} />
                 <ImageLinkForm 
                   onInputChange = {this.onInputChange} 
                   onButtonSubmit = {this.onButtonSubmit} 
                 />
-                <FaceRecognition box={box} imageUrl={imageUrl} />
+                <FaceRecognition boxes={boxes} imageUrl={imageUrl} />
             </div>
          : (
               this.state.route === 'sign-in' || route === 'sign-out'
