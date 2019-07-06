@@ -116,7 +116,7 @@ class  App extends Component {
 
     this.setState({imageUrl: input});
 
-    fetch('https://morning-woodland-38355.herokuapp.com/imageurl', {
+    fetch('http://localhost:3000/imageurl', {
         method: 'post',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
@@ -126,7 +126,7 @@ class  App extends Component {
       .then(response => response.json())
       .then(response => {
         if(response) {
-          fetch('https://morning-woodland-38355.herokuapp.com/image', {
+          fetch('http://localhost:3000/image', {
             method: 'put',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
