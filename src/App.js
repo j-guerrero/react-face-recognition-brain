@@ -7,6 +7,8 @@ import Logo from './components/Logo/Logo.js';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm.js';
 import Rank from './components/Rank/Rank.js';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition.js';
+import Modal from './components/Modal/Modal';
+import Profile from './components/Profile/Profile'
 import './App.css';
 
 const particlesOptions = {
@@ -26,7 +28,7 @@ const particlesOptions = {
       }
     },
     line_linked: {
-      enable: true
+      enable: false
     },
     move: {
       random: true,
@@ -34,6 +36,15 @@ const particlesOptions = {
       direction: "top",
       out_mode: "out"
     },
+    interactivity: {
+      events: {
+        onresize: {
+          enable: true,
+          denisty_auto: true,
+          density_area: 400
+        }
+      }
+    }
   }
 }
 
@@ -44,12 +55,15 @@ const intialState = {
       boxes: [],
       route: 'sign-in',
       isSignedIn: false,
+      isProfileOpen: false,
       user: {
         id:'',
         name: '',
         email: '',
         entries: 0,
-        joined : ''
+        joined : '',
+        age: '',
+        pet: ''
       }
 }
 
@@ -57,20 +71,7 @@ class  App extends Component {
 
   constructor(){
     super();
-    this.state = {
-      input: '',
-      imageUrl:'',
-      boxes: [],
-      route: 'sign-in',
-      isSignedIn: false,
-      user: {
-        id:'',
-        name: '',
-        email: '',
-        entries: 0,
-        joined : ''
-      }
-    }
+    this.state = intialState;
   }
 
   loadUser = (data) => {
@@ -148,24 +149,39 @@ class  App extends Component {
   onRouteChange = (route) => {
 
     if (route === 'sign-out'){
-      this.setState(intialState)
-      this.setState({route: 'sign-in'});
+      return this.setState(intialState)
     } else if (route === 'home'){
       this.setState({isSignedIn: true})
     }
-      
       this.setState({route: route});    
   };
 
+  toggleModal = () => {
+    this.setState(prevState => ({
+      ...prevState,
+        isProfileOpen: !prevState.isProfileOpen
+    }))
+  }
+
   render(){
 
-    const { isSignedIn, imageUrl, route, boxes, user } = this.state;
+    const { isSignedIn, isProfileOpen, imageUrl, route, boxes, user } = this.state;
 
     return (
       <div className="App">
         <Particles className = 'particles' params={particlesOptions} />
 
-        <Navigation isSignedIn = {isSignedIn} onRouteChange={this.onRouteChange} />
+        <Navigation isSignedIn = {isSignedIn} onRouteChange={this.onRouteChange} 
+          toggleModal={this.toggleModal} />
+        {isProfileOpen && 
+          <Modal>
+            <Profile 
+              isProfileOpen={isProfileOpen} 
+              toggleModal={this.toggleModal}
+              loadUser={this.loadUser} 
+              user={user} />
+          </Modal>
+        }
         { route === 'home' ?
           <div>
                 <Logo />

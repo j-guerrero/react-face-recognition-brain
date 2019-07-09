@@ -1,4 +1,5 @@
 import React from 'react'
+import './Register.css';
 
 class Register extends React.Component {
 
@@ -7,7 +8,8 @@ class Register extends React.Component {
 		this.state = {
 			name: '',
 			email: '',
-			password: ''
+			password: '',
+			isInvalid: false
 		}
 	}
 
@@ -38,6 +40,8 @@ class Register extends React.Component {
 				if (user.id){
 					this.props.loadUser(user)
 					this.props.onRouteChange('home')
+				}else{
+					this.setState({isInvalid: true})
 				}
 			})
 		
@@ -52,9 +56,9 @@ class Register extends React.Component {
 			    <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
 			      <legend className="f1 fw6 ph0 mh0">Register</legend>
 			      <div className="mt3">
-			        <label className="db fw6 lh-copy f6" htmlFor="email-address">Name</label>
+			        <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
 			        <input 
-			        	className="b--black pa2 input-reset ba bg-transparent hover-bg-black-60 hover-white w-100" 
+			        	className="b--black pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 			        	type="text" 
 			        	name="name"  
 			        	id="name" 
@@ -64,7 +68,7 @@ class Register extends React.Component {
 			      <div className="mt3">
 			        <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
 			        <input 
-			        	className="b--black pa2 input-reset ba bg-transparent hover-bg-black-60 hover-white w-100" 
+			        	className="b--black pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 			        	type="email" 
 			        	name="email-address"  
 			        	id="email-address" 
@@ -74,7 +78,7 @@ class Register extends React.Component {
 			      <div className="mv3">
 			        <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
 			        <input 
-			        	className="b--black pa2 input-reset ba bg-transparent hover-bg-black-60 hover-white w-100" 
+			        	className="b--black pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 			        	type="password" 
 			        	name="password"  
 			        	id="password"
@@ -82,11 +86,16 @@ class Register extends React.Component {
 			        />
 			      </div>
 			    </fieldset>
+
+			    { this.state.isInvalid &&
+			    	<div className="f6 red mv3"> Incorrect Form Submission </div>
+			    }
+
 			    <div className="">
 			      <input
 			      		onClick = {this.onSubmitRegister}
 			      		className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib
-			      		hover-bg-black-10" 
+			      		hover-white hover-bg-black" 
 			      		type="submit"
 			      		value="Register" />
 			    </div>

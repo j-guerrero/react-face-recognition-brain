@@ -1,4 +1,5 @@
 import React from 'react'
+import './SignIn.css';
 
 class SignIn extends React.Component {
 
@@ -24,6 +25,10 @@ class SignIn extends React.Component {
 
 	onPasswordChange = (event) => {
 		this.setState({signInPassword: event.target.value})
+	}
+
+	saveAuthTokenInSession = (token) => {
+		window.sessionStorage.setItem('token', token)
 	}
 
 	onSubmitSignIn = () => {
@@ -58,10 +63,11 @@ class SignIn extends React.Component {
 			})
 		})
 			.then(response => response.json())
-			.then(user => {
-				if (user.id){
+			.then(data => {
+				if (data.userId && data.success === 'true'){
 					this.setState({isInvalid: false});
-					this.props.loadUser(user);
+					this.saveAuthTokenInSession(data.token);
+					this.props.loadUser(data);
 					this.props.onRouteChange('home')
 				}
 				else{
@@ -82,7 +88,7 @@ class SignIn extends React.Component {
 			      <div className="mt3">
 			        <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
 			        <input 
-			        	className="b--black pa2 input-reset ba bg-transparent hover-bg-black-60 hover-white w-100" 
+			        	className="b--black pa2 input-reset ba bg-transparent hover-white w-100 hover-bg-black" 
 			        	type="email" 
 			        	name="email-address"  
 			        	id="email-address"
@@ -93,7 +99,7 @@ class SignIn extends React.Component {
 			      <div className="mv3">
 			        <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
 			        <input 
-			        	className="b--black pa2 input-reset ba bg-transparent hover-bg-black-60 hover-white w-100" 
+			        	className="b--black pa2 input-reset ba bg-transparent hover-white w-100 hover-bg-black" 
 			        	type="password" 
 			        	name="password"  
 			        	id="password" 
@@ -110,12 +116,12 @@ class SignIn extends React.Component {
 			    <div className="">
 			      <input
 			      		onClick = {this.onSubmitSignIn}
-			      		className="b--black ph3 pv2 mh1 input-reset ba bg-transparent grow pointer f6 dib" 
+			      		className="b--black ph3 pv2 mh1 input-reset ba bg-transparent grow pointer f6 dib hover-white hover-bg-black" 
 			      		type="submit"
 			      		value="Sign in" />
 			      <input 
 			      		onClick = {this.onSubmitTest}
-			      		className="b--black ph3 pv2 mh1 input-reset ba bg-transparent grow pointer f6 dib" 
+			      		className="b--black ph3 pv2 mh1 input-reset ba bg-transparent grow pointer f6 dib hover-white hover-bg-black" 
 			      		type="submit"
 			      		value="Test" />
 			    </div>

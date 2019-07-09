@@ -1,0 +1,7 @@
+.hover-bg-black:hover{
+	background-color: rgba(0,0,0,.8) !important;
+}
+
+.hover-bg-black:focus{
+	background-color: rgba(0,0,0,.6) !important;
+}
