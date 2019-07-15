@@ -5,6 +5,8 @@ const FaceRecognition = ({ boxes, imageUrl }) => {
 	return (
 		<div className='center ma'>
 			<div className = 'absolute mt2'>
+			{ imageUrl.length === 0 ? <div /> :
+				<div>
 				<img id='inputImage' alt = '' src = {imageUrl} width ='500px' height = 'auto'/>
 				{	Object.keys(boxes).map( (item,i) => { 
 					return(<div className='bounding-box' 
@@ -14,7 +16,9 @@ const FaceRecognition = ({ boxes, imageUrl }) => {
 										bottom: boxes[item].bottomRow,
 										left: boxes[item].leftCol}}
 							/>)
-				})
+					})
+				}
+				</div>
 			}
 			</div>
 

@@ -1,7 +1,16 @@
-.hover-bg-black:hover{
-	background-color: rgba(0,0,0,.8) !important;
+.hover-bg-white:hover{
+	background-color: rgba(255,255,255,.8) !important;
 }
 
-.hover-bg-black:focus{
-	background-color: rgba(0,0,0,.6) !important;
+.hover-bg-white:focus{
+	background-color: rgba(255,255,255,.6) !important;
+}
+
+.sign-in-text{
+	font-family:OpenSansLight;
+}
+
+@font-face{
+	font-family: OpenSansLight;
+	src: url('../../fonts/OpenSans-Light.ttf') format('truetype');
 }

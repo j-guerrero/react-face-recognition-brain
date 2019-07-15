@@ -8,64 +8,9 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm.js';
 import Rank from './components/Rank/Rank.js';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition.js';
 import Modal from './components/Modal/Modal';
-import Profile from './components/Profile/Profile'
+import Profile from './components/Profile/Profile';
+import { particlesOptions, intialState} from './constants.js';
 import './App.css';
-
-const particlesOptions = {
-  particles: {
-    number:{
-      value: 300,
-      density: {
-        enable: false,
-      }
-    },
-    size: {
-      value: 7,
-      random: true,
-      anim: {
-        speed: 2,
-        size_min:1
-      }
-    },
-    line_linked: {
-      enable: false
-    },
-    move: {
-      random: true,
-      speed: 1,
-      direction: "top",
-      out_mode: "out"
-    },
-    interactivity: {
-      events: {
-        onresize: {
-          enable: true,
-          denisty_auto: true,
-          density_area: 400
-        }
-      }
-    }
-  }
-}
-
-
-const intialState = {
-      input: '',
-      imageUrl:'',
-      boxes: [],
-      route: 'sign-in',
-      isSignedIn: false,
-      isProfileOpen: false,
-      user: {
-        id:'',
-        name: '',
-        email: '',
-        entries: 0,
-        joined : '',
-        age: '',
-        pet: ''
-      }
-}
 
 class  App extends Component {
 
@@ -77,7 +22,7 @@ class  App extends Component {
   componentDidMount() {
     const token = window.sessionStorage.getItem('token');
     if (token) {
-      fetch('http://localhost:3000/signin', {
+      fetch('https://morning-woodland-38355.herokuapp.com/signin', {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +32,7 @@ class  App extends Component {
       .then(response => response.json())
       .then(data =>{
         if(data && data.id){
-          fetch(`http://localhost:3000/profile/${data.id}`, {
+          fetch(`https://morning-woodland-38355.herokuapp.com/profile/${data.id}`, {
             method: 'get',
             headers: {
               'Content-Type': 'application/json',
@@ -118,26 +63,31 @@ class  App extends Component {
   }
 
   calculateFaceLocations = (data) => {
+    if(data && data.outputs){
 
-    const image = document.getElementById('inputImage');
-    const width = Number(image.width);
-    const height = Number(image.height);
+      const image = document.getElementById('inputImage');
+      const width = Number(image.width);
+      const height = Number(image.height);
 
-    const boundedBoxes = data.outputs[0].data.regions.map(item =>{
-      return {
-        leftCol: item.region_info.bounding_box.left_col * width,
-        topRow: item.region_info.bounding_box.top_row * height,
-        rightCol: width - (item.region_info.bounding_box.right_col * width),
-        bottomRow: height - (item.region_info.bounding_box.bottom_row * height)
-      }
-    })
-
-    return boundedBoxes;
+      const boundedBoxes = data.outputs[0].data.regions.map(item =>{
+        return {
+          leftCol: item.region_info.bounding_box.left_col * width,
+          topRow: item.region_info.bounding_box.top_row * height,
+          rightCol: width - (item.region_info.bounding_box.right_col * width),
+          bottomRow: height - (item.region_info.bounding_box.bottom_row * height)
+        }
+      })
+      return boundedBoxes;
+    } else { return [] }
+    
   }
 
 
   displayFaceBoxes = (boxes) => {
-    this.setState({boxes: boxes});
+    if(boxes){
+      this.setState({boxes: boxes});
+    }
+    
   }
 
   onInputChange = (event) => {
@@ -148,21 +98,32 @@ class  App extends Component {
 
     const { input, user } = this.state;
 
+    this.displayFaceBoxes([]);
     this.setState({imageUrl: input});
 
-    fetch('http://localhost:3000/imageurl', {
+    fetch('https://morning-woodland-38355.herokuapp.com/imageurl', {
         method: 'post',
-        headers: {'Content-Type':'application/json'},
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': window.sessionStorage.getItem('token')
+        },
         body: JSON.stringify({
           input: input
          })
       })
-      .then(response => response.json())
+      .then(response => {
+        if(response.status===200 || response.status === 204){
+          return response.json();
+        } else {throw Error ('Invalid image URL')}
+      })
       .then(response => {
         if(response) {
-          fetch('http://localhost:3000/image', {
+          fetch('https://morning-woodland-38355.herokuapp.com/image', {
             method: 'put',
-            headers: {'Content-Type':'application/json'},
+            headers: {
+              'Content-Type':'application/json',
+              'Authorization': window.sessionStorage.getItem('token')
+            },
             body: JSON.stringify({
               id: user.id
              })
@@ -173,10 +134,14 @@ class  App extends Component {
             })
             .catch(console.log);
         }
-
         this.displayFaceBoxes(this.calculateFaceLocations(response));
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        this.displayFaceBoxes([])
+        this.setState({imageUrl: ''})
+        alert("Please enter a valid image URL");
+      });
   };
 
   onRouteChange = (route) => {
@@ -203,9 +168,11 @@ class  App extends Component {
     return (
       <div className="App">
         <Particles className = 'particles' params={particlesOptions} />
-
-        <Navigation isSignedIn = {isSignedIn} onRouteChange={this.onRouteChange} 
-          toggleModal={this.toggleModal} />
+        <div className="header">
+          <Logo />
+          <Navigation isSignedIn = {isSignedIn} onRouteChange={this.onRouteChange} 
+            toggleModal={this.toggleModal} user={user} />
+        </div>
         {isProfileOpen && 
           <Modal>
             <Profile 
@@ -217,7 +184,6 @@ class  App extends Component {
         }
         { route === 'home' ?
           <div>
-                <Logo />
                 <Rank name={user.name} entries ={user.entries} />
                 <ImageLinkForm 
                   onInputChange = {this.onInputChange} 

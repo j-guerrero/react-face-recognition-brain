@@ -32,7 +32,7 @@ class SignIn extends React.Component {
 	}
 
 	onSubmitSignIn = () => {
-		fetch('http://localhost:3000/signin', {
+		fetch('https://morning-woodland-38355.herokuapp.com/signin', {
 			method: 'post',
 			headers: {'Content-Type':'application/json'},
 			body: JSON.stringify({
@@ -45,7 +45,7 @@ class SignIn extends React.Component {
 			if (data.userId && data.success === 'true'){
 				this.setState({isInvalid: false});
 				this.saveAuthTokenInSession(data.token);
-		        fetch(`http://localhost:3000/profile/${data.userId}`, {
+		        fetch(`https://morning-woodland-38355.herokuapp.com/profile/${data.userId}`, {
 		          	  method: 'get',
 			            headers: {
 			              'Content-Type': 'application/json',
@@ -65,41 +65,50 @@ class SignIn extends React.Component {
 	}
 
 	onSubmitTest = () => {
-		fetch('http://localhost:3000/signin', {
+		fetch('https://morning-woodland-38355.herokuapp.com/signin', {
 			method: 'post',
 			headers: {'Content-Type':'application/json'},
 			body: JSON.stringify({
-				email: "test@test.com",
-				password: "test"
+				email: 'test@test.com',
+				password: 'test'
 			})
 		})
-			.then(response => response.json())
-			.then(data => {
-				if (data.userId && data.success === 'true'){
-					this.setState({isInvalid: false});
-					this.saveAuthTokenInSession(data.token);
-					this.props.loadUser(data);
-					this.props.onRouteChange('home')
-				}
-				else{
-					this.setState({isInvalid: true})
-				}
-			})
-		
+		.then(response => response.json())
+		.then(data => {
+			if (data.userId && data.success === 'true'){
+				this.setState({isInvalid: false});
+				this.saveAuthTokenInSession(data.token);
+		        fetch(`https://morning-woodland-38355.herokuapp.com/profile/${data.userId}`, {
+		          	  method: 'get',
+			            headers: {
+			              'Content-Type': 'application/json',
+			              'Authorization': data.token
+            			}
+   				})
+	        	.then(resp => resp.json())
+	          	.then(user => {
+	            	if (user && user.email){
+	              		this.props.loadUser(user);
+	             	 	this.props.onRouteChange('home');
+	            	}
+	          	})
+		        .catch(console.log)
+		    } else{ this.setState({isInvalid: true})}
+		})	
 	}
 
 	render(){
 
 		return (
-		<article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center bg-white-40">
-			<main className="pa4 black-80">
+		<article className="br3 ba dark-gray b--black-10 mv1 w-100 w-50-m w-25-l mw6 shadow-5 center bg-white-40">
+			<main className="pa3 black-80">
 			  <div className="measure">
 			    <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-			      <legend className="f1 fw6 ph0 mh0">Sign In</legend>
+			      <legend className="f1 fw6 ph0 mh0 sign-in-text">Sign In</legend>
 			      <div className="mt3">
 			        <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
 			        <input 
-			        	className="b--black pa2 input-reset ba bg-transparent hover-white w-100 hover-bg-black" 
+			        	className="b--black pa2 input-reset ba bg-transparent hover-black w-100 hover-bg-white" 
 			        	type="email" 
 			        	name="email-address"  
 			        	id="email-address"
@@ -110,7 +119,7 @@ class SignIn extends React.Component {
 			      <div className="mv3">
 			        <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
 			        <input 
-			        	className="b--black pa2 input-reset ba bg-transparent hover-white w-100 hover-bg-black" 
+			        	className="b--black pa2 input-reset ba bg-transparent hover-black w-100 hover-bg-white" 
 			        	type="password" 
 			        	name="password"  
 			        	id="password" 
@@ -127,12 +136,12 @@ class SignIn extends React.Component {
 			    <div className="">
 			      <input
 			      		onClick = {this.onSubmitSignIn}
-			      		className="b--black ph3 pv2 mh1 input-reset ba bg-transparent grow pointer f6 dib hover-white hover-bg-black" 
+			      		className="b--black ph3 pv2 mh1 input-reset ba bg-transparent grow pointer f6 dib hover-black hover-bg-white" 
 			      		type="submit"
 			      		value="Sign in" />
 			      <input 
 			      		onClick = {this.onSubmitTest}
-			      		className="b--black ph3 pv2 mh1 input-reset ba bg-transparent grow pointer f6 dib hover-white hover-bg-black" 
+			      		className="b--black ph3 pv2 mh1 input-reset ba bg-transparent grow pointer f6 dib hover-black hover-bg-white" 
 			      		type="submit"
 			      		value="Test" />
 			    </div>

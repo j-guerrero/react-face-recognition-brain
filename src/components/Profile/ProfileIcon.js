@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Avatar from 'react-avatar';
 import {	Dropdown,
 			DropdownToggle,
 		 	DropdownMenu,
@@ -10,6 +11,7 @@ class ProfileIcon extends Component {
 		super(props);
 		this.toggle = this.toggle.bind(this);
 		this.state = {
+			name: this.props.user.name,
 			dropdownOpen: false
 		}
 	}
@@ -32,9 +34,7 @@ class ProfileIcon extends Component {
 		          data-toggle="dropdown"
 		          aria-expanded={this.state.dropdownOpen}
 		        >
-				  <img
-				      src="http://tachyons.io/img/logo.jpg"
-				      className="br-100 ba h3 w3 dib" alt="avatar" />
+				<Avatar name={this.state.name} size="75" round={true}/>
 		        </DropdownToggle>
 		        <DropdownMenu right
 		        	className='b--transparent shadow-5 o-90 mt4' 
