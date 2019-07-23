@@ -4,6 +4,7 @@ import './Profile.css';
 
 class Profile extends Component {
 
+	// Can add any state properties of user to be displayed
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -24,6 +25,7 @@ class Profile extends Component {
 		}
 	}
 
+	// Updates info fields in POSTGRES database of {user.id}
 	onProfileUpdate = (data) => {
 		fetch(`https://morning-woodland-38355.herokuapp.com/profile/${this.props.user.id}`, {
 			method: 'post',
@@ -41,7 +43,6 @@ class Profile extends Component {
 	}
 
 	render(){
-
 		const { toggleModal } = this.props;
 		const { name, age, pet, entries } = this.state;	
 		return (

@@ -19,6 +19,7 @@ class  App extends Component {
     this.state = intialState;
   }
 
+  // On DOM load, check for token of previous session
   componentDidMount() {
     const token = window.sessionStorage.getItem('token');
     if (token) {
@@ -52,6 +53,7 @@ class  App extends Component {
     }
   }
 
+  // USER DATA
   loadUser = (data) => {
     this.setState({ user: {
         id: data.id,
@@ -62,6 +64,7 @@ class  App extends Component {
     }})
   }
 
+// <! --- FACE FUNCITONS --- !> //
   calculateFaceLocations = (data) => {
     if(data && data.outputs){
 
@@ -101,6 +104,9 @@ class  App extends Component {
     this.displayFaceBoxes([]);
     this.setState({imageUrl: input});
 
+    // Post-fetch from Heroku server;
+    // Recieves image URL, sends to Clarai API, and recieves return data;
+    // Passes data to function that finds bounding box info and returns array to be mapped to image;
     fetch('https://morning-woodland-38355.herokuapp.com/imageurl', {
         method: 'post',
         headers: {
@@ -144,6 +150,9 @@ class  App extends Component {
       });
   };
 
+// <!-- END FACE FUNCTIONS -- !>
+
+  // PAGE TRANSFER
   onRouteChange = (route) => {
 
     if (route === 'sign-out'){
@@ -154,6 +163,7 @@ class  App extends Component {
       this.setState({route: route});    
   };
 
+  // MODAL
   toggleModal = () => {
     this.setState(prevState => ({
       ...prevState,
@@ -161,6 +171,7 @@ class  App extends Component {
     }))
   }
 
+  // MAIN PAGE
   render(){
 
     const { isSignedIn, isProfileOpen, imageUrl, route, boxes, user } = this.state;

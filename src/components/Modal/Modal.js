@@ -10,10 +10,12 @@ class Modal extends React.Component {
 		this.el = document.createElement('div');
 	}
 
+	// Add to HTML doc if active
 	componentDidMount() {
 		modalRoot.appendChild(this.el);
 	}
 
+	// Remove from HTML ...
 	componentWillUnmount() {
 		modalRoot.removeChild(this.el);
 	}

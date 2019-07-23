@@ -21,6 +21,7 @@ class Rank extends React.Component {
 		this.generateEmoji(this.props.entries)
 	}
 
+	// Emojis listed in array of AWS Lambda function that returns based on entry count
 	generateEmoji = (entries) => {
 		fetch(`https://jnkm4itq1i.execute-api.us-east-1.amazonaws.com/prod/rank?rank=${entries}`)
 		.then(response=>response.json())
