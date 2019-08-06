@@ -31,7 +31,9 @@ class SignIn extends React.Component {
 		window.sessionStorage.setItem('token', token)
 	}
 
+	// Sends fetch request on remote Heroku server running Express.js backend
 	onSubmitSignIn = () => {
+
 		fetch('https://morning-woodland-38355.herokuapp.com/signin', {
 			method: 'post',
 			headers: {'Content-Type':'application/json'},
@@ -64,37 +66,10 @@ class SignIn extends React.Component {
 		})	
 	}
 
-	onSubmitTest = () => {
-		fetch('https://morning-woodland-38355.herokuapp.com/signin', {
-			method: 'post',
-			headers: {'Content-Type':'application/json'},
-			body: JSON.stringify({
-				email: 'test@test.com',
-				password: 'test'
-			})
-		})
-		.then(response => response.json())
-		.then(data => {
-			if (data.userId && data.success === 'true'){
-				this.setState({isInvalid: false});
-				this.saveAuthTokenInSession(data.token);
-		        fetch(`https://morning-woodland-38355.herokuapp.com/profile/${data.userId}`, {
-		          	  method: 'get',
-			            headers: {
-			              'Content-Type': 'application/json',
-			              'Authorization': data.token
-            			}
-   				})
-	        	.then(resp => resp.json())
-	          	.then(user => {
-	            	if (user && user.email){
-	              		this.props.loadUser(user);
-	             	 	this.props.onRouteChange('home');
-	            	}
-	          	})
-		        .catch(console.log)
-		    } else{ this.setState({isInvalid: true})}
-		})	
+
+	onSubmitTest = async() => {
+		await this.setState({signInEmail: 'test@test.com', signInPassword:'test'});
+		this.onSubmitSignIn();
 	}
 
 	render(){

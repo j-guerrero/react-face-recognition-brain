@@ -1,3 +1,5 @@
+// ## -- USED FOR RUNNING UNIT TESTING -- ##
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';

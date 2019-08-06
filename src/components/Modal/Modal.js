@@ -10,16 +10,17 @@ class Modal extends React.Component {
 		this.el = document.createElement('div');
 	}
 
-	// Add to HTML doc if active
+	// Add to HTML doc if Modal is activated
 	componentDidMount() {
 		modalRoot.appendChild(this.el);
 	}
 
-	// Remove from HTML ...
+	// Remove from HTML doc if Modal is dismissed
 	componentWillUnmount() {
 		modalRoot.removeChild(this.el);
 	}
 
+	// Portals used for rendering outside of DOM Heirarchy
 	render(){
 		return ReactDOM.createPortal(this.props.children,this.el)
 	}

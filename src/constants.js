@@ -35,7 +35,7 @@ export const particlesOptions = {
   }
 };
 
-export const intialState = {
+export const initialState = {
       input: '',
       imageUrl:'',
       boxes: [],

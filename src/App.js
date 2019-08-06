@@ -9,14 +9,14 @@ import Rank from './components/Rank/Rank.js';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition.js';
 import Modal from './components/Modal/Modal';
 import Profile from './components/Profile/Profile';
-import { particlesOptions, intialState} from './constants.js';
+import { particlesOptions, initialState} from './constants.js';
 import './App.css';
 
 class  App extends Component {
 
   constructor(){
     super();
-    this.state = intialState;
+    this.state = initialState;
   }
 
   // On DOM load, check for token of previous session
@@ -64,7 +64,7 @@ class  App extends Component {
     }})
   }
 
-// <! --- FACE FUNCITONS --- !> //
+// <! --- FACE BOUNDING BOX FUNCTIONS --- !>
   calculateFaceLocations = (data) => {
     if(data && data.outputs){
 
@@ -95,7 +95,7 @@ class  App extends Component {
 
   onInputChange = (event) => {
     this.setState({input: event.target.value});
-  };
+  }
 
   onButtonSubmit = () =>{
 
@@ -148,7 +148,7 @@ class  App extends Component {
         this.setState({imageUrl: ''})
         alert("Please enter a valid image URL");
       });
-  };
+  }
 
 // <!-- END FACE FUNCTIONS -- !>
 
@@ -156,12 +156,12 @@ class  App extends Component {
   onRouteChange = (route) => {
 
     if (route === 'sign-out'){
-      return this.setState(intialState)
+      return this.setState(initialState)
     } else if (route === 'home'){
       this.setState({isSignedIn: true})
     }
       this.setState({route: route});    
-  };
+  }
 
   // MODAL
   toggleModal = () => {
